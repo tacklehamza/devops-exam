@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "devops-exam-app",
   "version": "1.0.0",
@@ -13,3 +14,20 @@
     "dotenv": "^16.3.1"
   }
 }
+=======
+{
+  "name": "devops-exam-app",
+  "version": "1.0.0",
+  "description": "Full-stack DevOps exam app - FA23-BCS-214",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^8.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1"
+  }
+}
+>>>>>>> c9d92cdf2d5f35fe2c56ff2f53250125526fa9e4
