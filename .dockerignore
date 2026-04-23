@@ -1,0 +1,17 @@
+# Exclude node_modules — installed fresh inside container (Best Practice #3)
+node_modules
+
+# Exclude git history
+.git
+.gitignore
+
+# Exclude environment files (secrets should not be baked into image)
+.env
+
+# Exclude logs
+*.log
+npm-debug.log*
+
+# Exclude OS files
+.DS_Store
+Thumbs.db
