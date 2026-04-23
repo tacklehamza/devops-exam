@@ -16,10 +16,7 @@
       align-items: center;
       padding: 40px 20px;
     }
-    header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
+    header { text-align: center; margin-bottom: 30px; }
     header h1 { font-size: 2rem; color: #e94560; }
     header p { color: #aaa; margin-top: 6px; }
     .card {
@@ -30,11 +27,7 @@
       max-width: 560px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.4);
     }
-    .input-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
+    .input-row { display: flex; gap: 10px; margin-bottom: 20px; }
     input[type="text"] {
       flex: 1;
       padding: 10px 14px;
@@ -64,18 +57,15 @@
       border-radius: 8px;
       margin-bottom: 10px;
     }
-    .task-item span { font-size: 0.95rem; }
-    .delete-btn {
-      background: transparent;
-      color: #e94560;
-      font-size: 1.1rem;
-      padding: 4px 8px;
-    }
+    .delete-btn { background: transparent; color: #e94560; font-size: 1.1rem; padding: 4px 8px; }
     .status-bar {
       margin-top: 20px;
       font-size: 0.85rem;
-      color: #aaa;
       text-align: center;
+      padding: 10px;
+      border-radius: 6px;
+      background: rgba(233,69,96,0.15);
+      color: #e94560;
     }
     .badge {
       display: inline-block;
@@ -93,7 +83,6 @@
     <h1>Task Manager</h1>
     <p>DevOps Exam App &mdash; FA23-BCS-214 <span class="badge">Running in Docker</span></p>
   </header>
-
   <div class="card">
     <div class="input-row">
       <input type="text" id="taskInput" placeholder="Enter a new task..." />
@@ -104,58 +93,45 @@
   </div>
 
   <script>
-    const API = '/api';
+    // In-memory tasks for demo mode
+    let localTasks = [];
 
-    async function loadTasks() {
-      try {
-        const res = await fetch(`${API}/tasks`);
-        const tasks = await res.json();
-        const list = document.getElementById('taskList');
-        list.innerHTML = '';
-        tasks.forEach(t => {
+    function renderTasks() {
+      const list = document.getElementById('taskList');
+      list.innerHTML = '';
+      if (localTasks.length === 0) {
+        list.innerHTML = '<li style="text-align:center;padding:20px;color:#666;">No tasks yet. Add one!</li>';
+      } else {
+        localTasks.forEach(t => {
           const li = document.createElement('li');
           li.className = 'task-item';
           li.innerHTML = `<span>${t.title}</span>
-            <button class="delete-btn" onclick="deleteTask('${t._id}')">&#x2715;</button>`;
+            <button class="delete-btn" onclick="deleteTask('${t.id}')">&#x2715;</button>`;
           list.appendChild(li);
         });
-        document.getElementById('statusBar').textContent = `${tasks.length} task(s) loaded`;
-      } catch (e) {
-        document.getElementById('statusBar').textContent = 'DB not connected — running in demo mode';
       }
+      document.getElementById('statusBar').textContent = `Demo Mode — ${localTasks.length} task(s) (in-memory)`;
     }
 
-    async function addTask() {
+    function addTask() {
       const input = document.getElementById('taskInput');
       const title = input.value.trim();
       if (!title) return;
-      try {
-        await fetch(`${API}/tasks`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title })
-        });
-        input.value = '';
-        loadTasks();
-      } catch (e) {
-        alert('Could not add task');
-      }
+      localTasks.unshift({ id: Date.now().toString(), title });
+      input.value = '';
+      renderTasks();
     }
 
-    async function deleteTask(id) {
-      try {
-        await fetch(`${API}/tasks/${id}`, { method: 'DELETE' });
-        loadTasks();
-      } catch (e) {
-        alert('Could not delete task');
-      }
+    function deleteTask(id) {
+      localTasks = localTasks.filter(t => t.id !== id);
+      renderTasks();
     }
 
     document.getElementById('taskInput').addEventListener('keypress', e => {
       if (e.key === 'Enter') addTask();
     });
 
-    loadTasks();
+    renderTasks();
   </script>
 </body>
 </html>

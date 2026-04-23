@@ -22,8 +22,6 @@ spec:
           env:
             - name: PORT
               value: "3000"
-            - name: MONGO_URI
-              value: "mongodb://localhost:27017/devopsdb"
           resources:
             requests:
               memory: "64Mi"

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: taskmanager-config
+data:
+  # MongoDB URI - Update this with your actual MongoDB cluster connection string
+  # For local MongoDB: mongodb://mongodb-service:27017/devopsdb
+  # For MongoDB Atlas: mongodb+srv://user:pass@cluster.mongodb.net/devopsdb
+  mongo-uri: "mongodb://mongodb-service:27017/devopsdb"
+  
+  # Other app settings can be added here
+  app-env: "production"
