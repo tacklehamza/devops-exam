@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>FA23-BCS-214 - DevOps Lab Mid Exam</title>
+<style>
+  body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 40px; color: #000; }
+  h1 { text-align: center; font-size: 20px; margin-bottom: 4px; }
+  h2 { text-align: center; font-size: 16px; font-weight: normal; margin-bottom: 20px; }
+  .info-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+  .info-table td { border: 1px solid #000; padding: 8px 12px; font-size: 14px; }
+  h3 { background: #000; color: #fff; padding: 8px 12px; font-size: 15px; margin-top: 30px; }
+  h4 { font-size: 14px; margin: 16px 0 6px 0; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+  p, li { font-size: 13px; line-height: 1.7; }
+  ul { margin: 6px 0 10px 20px; }
+  pre { background: #f4f4f4; border: 1px solid #ccc; padding: 12px; font-size: 12px; border-radius: 4px; overflow-x: auto; white-space: pre-wrap; }
+  .screenshot-box {
+    border: 2px dashed #999;
+    background: #fafafa;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0 20px 0;
+    color: #888;
+    font-size: 13px;
+    font-style: italic;
+    border-radius: 6px;
+  }
+  .links { background: #f0f0f0; padding: 12px; border-radius: 6px; margin: 10px 0; }
+  .links a { color: #0066cc; font-size: 13px; }
+  .page-break { page-break-before: always; }
+  @media print {
+    .screenshot-box { min-height: 180px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>COMSATS UNIVERSITY ISLAMABAD — Lahore Campus</h1>
+<h2>Department of Computer Science — Lab Mid Examination<br/>Course: DevOps for Cloud Computing (CSC418)</h2>
+
+<table class="info-table">
+  <tr>
+    <td><b>Name:</b> [Your Name]</td>
+    <td><b>Reg No:</b> FA23-BCS-214</td>
+  </tr>
+  <tr>
+    <td><b>Semester:</b> 6th — Batch FA23</td>
+    <td><b>Date:</b> 23 April 2026</td>
+  </tr>
+  <tr>
+    <td><b>Instructor:</b> Dr. M. Hasanain Ch</td>
+    <td><b>Total Marks:</b> 25</td>
+  </tr>
+</table>
+
+<!-- LINKS -->
+<div class="links">
+  <b>Submission Links:</b><br/>
+  GitHub Repository: <a href="https://github.com/tacklehamza/devops-exam">https://github.com/tacklehamza/devops-exam</a><br/>
+  Docker Hub Image: <a href="https://hub.docker.com/r/tacklewithhamza/fa23-bcs-214">https://hub.docker.com/r/tacklewithhamza/fa23-bcs-214</a><br/>
+  Kubernetes Public URL: http://127.0.0.1 (Minikube Local Cluster)
+</div>
+
+<!-- PART 1 -->
+<h3>PART 1: Docker Installation, Configuration, and Image Engineering [8 Marks]</h3>
+
+<h4>1. Docker Installation Verification [1 Mark]</h4>
+<p>Docker Desktop was installed and verified using the following command:</p>
+<pre>docker --version
+docker ps</pre>
+<div class="screenshot-box">[ Screenshot: docker --version output ]</div>
+
+<h4>2. Dockerfile [3 Marks]</h4>
+<p>A well-structured Dockerfile was created with the following best practices:</p>
+<ul>
+  <li>Base image: <b>node:18-alpine</b> (slim variant)</li>
+  <li>Working directory defined: <b>/app</b></li>
+  <li>Only required files copied</li>
+  <li>Dependencies installed with <b>--omit=dev</b></li>
+  <li>Port 3000 exposed</li>
+  <li>Application started with <b>node server.js</b></li>
+</ul>
+<pre>FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install --omit=dev
+COPY . .
+EXPOSE 3000
+CMD ["node", "server.js"]</pre>
+
+<h4>3. Docker Image Build with Reg No. Tag [1 Mark]</h4>
+<p>Image was built using registration number as tag:</p>
+<pre>docker build -t fa23-bcs-214 .</pre>
+<div class="screenshot-box">[ Screenshot: docker build output ]</div>
+
+<h4>4. Container Running Locally [1 Mark]</h4>
+<p>Container was run locally and application was verified in browser at http://localhost:3000</p>
+<pre>docker run -d -p 3000:3000 --name taskmanager fa23-bcs-214
+docker ps</pre>
+<div class="screenshot-box">[ Screenshot: docker ps showing running container ]</div>
+<div class="screenshot-box">[ Screenshot: Browser showing app at localhost:3000 ]</div>
+
+<h4>5. Docker Optimization — Best Practices Applied [2 Marks]</h4>
+<ul>
+  <li><b>Best Practice 1 — Slim Base Image:</b> Used <code>node:18-alpine</code> instead of <code>node:18</code>. This reduces image size from ~900MB to ~180MB.</li>
+  <li><b>Best Practice 2 — Layer Caching:</b> Copied <code>package*.json</code> first before copying source code. This means npm install only re-runs when dependencies change, not on every code change.</li>
+  <li><b>Best Practice 3 — .dockerignore:</b> Created <code>.dockerignore</code> to exclude <code>node_modules</code>, <code>.env</code>, and <code>.git</code> from the build context, reducing build time and image size.</li>
+  <li><b>Best Practice 4 — Production Dependencies Only:</b> Used <code>--omit=dev</code> flag to skip dev dependencies in the final image.</li>
+</ul>
+
+<!-- PART 2 -->
+<h3 class="page-break">PART 2: Git, GitHub, and Version Control Workflow [5 Marks]</h3>
+
+<h4>1. Git Repository Initialized and Connected to GitHub [1 Mark]</h4>
+<pre>git init
+git remote add origin https://github.com/tacklehamza/devops-exam.git</pre>
+
+<h4>2. Full Source Code Pushed to GitHub [1 Mark]</h4>
+<div class="screenshot-box">[ Screenshot: GitHub repository page showing all files ]</div>
+
+<h4>3. Git Commands Demonstrated [1 Mark]</h4>
+<pre>git add .
+git commit -m "Initial commit: Add full-stack app with Dockerfile and K8s configs"
+git push origin main
+git pull origin main --allow-unrelated-histories</pre>
+<div class="screenshot-box">[ Screenshot: Terminal showing git add, commit, push, pull commands ]</div>
+
+<h4>4. Second Commit After Fix [1 Mark]</h4>
+<p>A small UI improvement was made — badge text updated from "Running in Docker" to "Deployed on Kubernetes".</p>
+<pre>git add .
+git commit -m "Fix: Update badge text to Deployed on Kubernetes"
+git push origin main</pre>
+<div class="screenshot-box">[ Screenshot: Second commit push output ]</div>
+
+<h4>5. Commit History [1 Mark]</h4>
+<pre>git log --oneline</pre>
+<div class="screenshot-box">[ Screenshot: git log --oneline showing multiple commits ]</div>
+
+<!-- PART 3 -->
+<h3 class="page-break">PART 3: Cloud Deployment with Kubernetes [8 Marks]</h3>
+
+<h4>1. Cloud/Kubernetes Architecture [2 Marks]</h4>
+<p>The application was deployed using <b>Minikube</b> — a local Kubernetes cluster running on Docker Desktop. The architecture consists of:</p>
+<ul>
+  <li><b>Docker Desktop</b> — Container runtime engine</li>
+  <li><b>Minikube</b> — Local Kubernetes cluster (single node)</li>
+  <li><b>Kubernetes Deployment</b> — Manages 2 replicas of the app</li>
+  <li><b>Kubernetes Service (LoadBalancer)</b> — Exposes app externally</li>
+  <li><b>Docker Hub</b> — Image registry (tacklewithhamza/fa23-bcs-214)</li>
+</ul>
+
+<h4>2. Docker Image Pushed to Docker Hub [1 Mark]</h4>
+<pre>docker tag fa23-bcs-214 tacklewithhamza/fa23-bcs-214:latest
+docker push tacklewithhamza/fa23-bcs-214:latest</pre>
+<div class="screenshot-box">[ Screenshot: Docker Hub page showing pushed image ]</div>
+<div class="screenshot-box">[ Screenshot: docker push output in terminal ]</div>
+
+<h4>3. Kubernetes YAML Files [2 Marks]</h4>
+<p><b>deployment.yaml:</b></p>
+<pre>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskmanager-deployment
+  labels:
+    app: taskmanager
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: taskmanager
+  template:
+    metadata:
+      labels:
+        app: taskmanager
+    spec:
+      containers:
+        - name: taskmanager
+          image: tacklewithhamza/fa23-bcs-214:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: PORT
+              value: "3000"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "250m"</pre>
+
+<p><b>service.yaml:</b></p>
+<pre>apiVersion: v1
+kind: Service
+metadata:
+  name: taskmanager-service
+  labels:
+    app: taskmanager
+spec:
+  type: LoadBalancer
+  selector:
+    app: taskmanager
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000</pre>
+
+<h4>4. Pods Running Successfully [1 Mark]</h4>
+<pre>kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
+kubectl get pods</pre>
+<div class="screenshot-box">[ Screenshot: kubectl get pods showing Running status ]</div>
+
+<h4>5. Application Publicly Accessible [1 Mark]</h4>
+<pre>minikube service taskmanager-service</pre>
+<div class="screenshot-box">[ Screenshot: Browser showing app running on Minikube URL ]</div>
+
+<h4>6. Scaling Demonstration [1 Mark]</h4>
+<pre>kubectl scale deployment taskmanager-deployment --replicas=3
+kubectl get pods
+kubectl scale deployment taskmanager-deployment --replicas=2
+kubectl get pods</pre>
+<div class="screenshot-box">[ Screenshot: kubectl get pods showing 3 pods running ]</div>
+<div class="screenshot-box">[ Screenshot: kubectl get pods showing scale down with Terminating pod ]</div>
+
+<!-- PART 4 TROUBLESHOOTING -->
+<h3 class="page-break">PART 4: Troubleshooting and DevOps Analysis [4 Marks]</h3>
+
+<h4>Issue: Git Push Rejected Due to Remote Conflict</h4>
+
+<p><b>1. Issue Identified:</b></p>
+<p>When trying to push local commits to GitHub, the push was rejected because the remote repository had commits that were not present locally.</p>
+
+<p><b>2. Error Message (Before Fix):</b></p>
+<pre>! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'https://github.com/tacklehamza/devops-exam.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. Use 'git pull' before pushing again.</pre>
+<div class="screenshot-box">[ Screenshot: Terminal showing git push rejected error ]</div>
+
+<p><b>3. Diagnosis:</b></p>
+<p>The remote repository had a README.md and initial commit added via GitHub web interface. The local repository had different commits. Git rejected the push to prevent overwriting remote history.</p>
+
+<p><b>4. Fix Applied:</b></p>
+<pre>git pull origin main --allow-unrelated-histories
+git add .
+git commit -m "Merge remote changes"
+git push origin main</pre>
+
+<p><b>5. Result After Fix:</b></p>
+<p>Push was successful. All local and remote commits were merged and pushed to GitHub.</p>
+<div class="screenshot-box">[ Screenshot: Terminal showing successful git push after fix ]</div>
+
+</body>
+</html>
